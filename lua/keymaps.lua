@@ -51,4 +51,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- bind C-d to zz after a move
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Move down and center' })
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Move up and center' })
 -- vim: ts=2 sts=2 sw=2 et
