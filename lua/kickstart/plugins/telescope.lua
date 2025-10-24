@@ -65,12 +65,12 @@ return {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
-            fzf = {
-              fuzzy = true,
-              override_generic_sorter = false,
-              override_file_sorter = true,
-              case_mode = "ignore_case",
-            }
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = false,
+            override_file_sorter = true,
+            case_mode = 'ignore_case',
+          },
         },
       }
 
@@ -110,7 +110,7 @@ return {
       end, { desc = '[F]ind [/] in Open Files' })
 
       vim.keymap.set('n', '<leader>s', function()
-        local current_word = vim.fn.expand('<cword>')
+        local current_word = vim.fn.expand '<cword>'
         require('telescope.builtin').live_grep {
           default_text = current_word,
           prompt_title = 'Live Grep Word Under Cursor',
@@ -118,19 +118,42 @@ return {
       end, { desc = '[S]earch Word under cursor' })
 
       vim.keymap.set('n', '<leader>d', function()
-        local current_word = vim.fn.expand('<cword>')
+        local current_word = vim.fn.expand '<cword>'
         require('telescope.builtin').find_files {
           default_text = current_word,
           prompt_title = 'Search Files with Word Under Cursor',
         }
       end, { desc = 'Search Wor[d] in files' })
-      
-      
 
+      vim.keymap.set('n', '<leader>ft', function()
+        local filename = vim.fn.expand '%:t:r' -- base name without extension
+
+        -- Run ripgrep to find candidate test files
+        local cmd = {
+          'rg',
+          '--files',
+          '--iglob',
+          filename .. '-test.*',
+          '--iglob',
+          filename .. '.test.*',
+        }
+        local results = vim.fn.systemlist(cmd)
+
+        if #results == 0 then
+          vim.notify('No related test files found', vim.log.levels.INFO)
+        elseif #results == 1 then
+          vim.cmd.edit(results[1])
+        else
+          builtin.find_files {
+            prompt_title = 'Find Related Test',
+            find_command = cmd,
+          }
+        end
+      end, { desc = '[F]find [t]est file' })
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>fc', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[F]ind [N]eovim files' })
+      end, { desc = '[F]ind Neovim [c]onfig' })
     end,
   },
 }

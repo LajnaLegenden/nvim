@@ -192,6 +192,9 @@ return {
           end,
         },
       }
+      vim.keymap.set('n', '<leader>ld', function()
+        vim.diagnostic.open_float(nil, { focusable = true })
+      end, { desc = 'Show diagnostics (focusable)' })
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
@@ -218,7 +221,9 @@ return {
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {},
+        -- ts_ls = {},
+        vtsls = {},
+        copilot = {},
         --
 
         lua_ls = {

@@ -28,7 +28,11 @@ return {
           --   end,
           -- },
         },
-        opts = {},
+        config = function()
+          require('luasnip.loaders.from_lua').lazy_load {
+            paths = vim.fn.stdpath 'config' .. '/lua/snippets',
+          }
+        end,
       },
       'folke/lazydev.nvim',
     },
@@ -58,7 +62,16 @@ return {
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'default',
-
+        ['<Tab>'] = {
+          'snippet_forward',
+          function() -- sidekick next edit suggestion
+            return require('sidekick').nes_jump_or_apply()
+          end,
+          function() -- if you are using Neovim's native inline completions
+            return vim.lsp.inline_completion.get()
+          end,
+          'fallback',
+        },
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
       },
