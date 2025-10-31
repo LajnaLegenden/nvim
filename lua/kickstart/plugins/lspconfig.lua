@@ -261,6 +261,7 @@ return {
         'eslint_d',
         'prettier',
         'biome',
+        'dprint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

@@ -14,7 +14,7 @@ return {
       },
     },
     config = function()
-      require('conform').setup({
+      require('conform').setup {
         notify_on_error = true,
         format_on_save = function(bufnr)
           -- Disable "format_on_save lsp_fallback" for languages that don't
@@ -24,7 +24,7 @@ return {
           if disable_filetypes[vim.bo[bufnr].filetype] then
             return nil
           else
-            print("Formatting buffer")
+            print 'Formatting buffer'
             return {
               timeout_ms = 1500,
               lsp_format = 'fallback',
@@ -33,65 +33,71 @@ return {
         end,
         formatters = {
           shfmt = {
-            prepend_args = { "-i", "2" },
+            prepend_args = { '-i', '2' },
           },
           eslint_d = {
             require_cwd = true,
             ignore_stderr = true, -- ✅ only show stdout, suppress eslint warnings
 
-            cwd = require("conform.util").root_file({
-                ".eslintrc",
-                ".eslintrc.json",
-                ".eslintrc.js",
-                ".eslintrc.cjs",
-                ".eslintrc.yaml",
-                ".eslintrc.yml",
-                "eslint.config.js",
-                "eslint.config.mjs",
-                "eslint.config.cjs",
-              }),
+            cwd = require('conform.util').root_file {
+              '.eslintrc',
+              '.eslintrc.json',
+              '.eslintrc.js',
+              '.eslintrc.cjs',
+              '.eslintrc.yaml',
+              '.eslintrc.yml',
+              'eslint.config.js',
+              'eslint.config.mjs',
+              'eslint.config.cjs',
+            },
           },
-          
+
           prettier = {
             require_cwd = true,
-            cwd = require("conform.util").root_file({
-                ".prettierrc",
-                ".prettierrc.json",
-                ".prettierrc.js",
-                ".prettierrc.cjs",
-                ".prettierrc.yaml",
-                ".prettierrc.yml",
-                ".prettierrc.json5",
-                ".prettierrc.mjs",
-                ".prettierrc.toml",
-                "prettier.config.js",
-                "prettier.config.cjs",
-                "prettier.config.mjs",
-                })
+            cwd = require('conform.util').root_file {
+              '.prettierrc',
+              '.prettierrc.json',
+              '.prettierrc.js',
+              '.prettierrc.cjs',
+              '.prettierrc.yaml',
+              '.prettierrc.yml',
+              '.prettierrc.json5',
+              '.prettierrc.mjs',
+              '.prettierrc.toml',
+              'prettier.config.js',
+              'prettier.config.cjs',
+              'prettier.config.mjs',
             },
+          },
+          dprint = {
+            require_cwd = true,
+            cwd = require('conform.util').root_file {
+              'dprint.json',
+            },
+          },
           biome = {
             require_cwd = true,
-            cwd = require("conform.util").root_file({
-                "biome.json",
-                "biome.jsonc",
-              })
+            cwd = require('conform.util').root_file {
+              'biome.json',
+              'biome.jsonc',
+            },
           },
         },
         formatters_by_ft = {
-          lua = { "stylua" },
-          python = { "isort", "black" },
-          javascript = { "eslint_d", "prettier", "biome" },
-          typescript = { "eslint_d", "prettier", "biome" },
-          javascriptreact = { "eslint_d", "prettier", "biome" },
-          typescriptreact = { "eslint_d", "prettier", "biome" },
-          json = { "prettier", "biome" },
-          jsonc = { "prettier", "biome" },
-          css = { "prettier", "biome" },
-          scss = { "prettier", "biome" },
-          html = { "prettier", "biome" },
-          markdown = { "prettier", "biome" },
+          lua = { 'stylua' },
+          python = { 'isort', 'black' },
+          javascript = { 'dprint', 'eslint_d', 'prettier', 'biome' },
+          typescript = { 'dprint', 'eslint_d', 'prettier', 'biome' },
+          javascriptreact = { 'dprint', 'eslint_d', 'prettier', 'biome' },
+          typescriptreact = { 'dprint', 'eslint_d', 'prettier', 'biome' },
+          json = { 'prettier', 'biome' },
+          jsonc = { 'prettier', 'biome' },
+          css = { 'prettier', 'biome' },
+          scss = { 'prettier', 'biome' },
+          html = { 'prettier', 'biome' },
+          markdown = { 'prettier', 'biome' },
         },
-      })
+      }
     end,
   },
 }
