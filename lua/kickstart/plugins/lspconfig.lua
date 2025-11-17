@@ -202,6 +202,11 @@ return {
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
+      -- List of LSP servers to disable (won't be automatically set up by mason-lspconfig)
+      local disabled_servers = {
+        ts_ls = true, -- Using amendLsp and vtsls instead
+      }
+
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
@@ -224,6 +229,7 @@ return {
         -- ts_ls = {},
         vtsls = {},
         copilot = {},
+        jsonls = {},
         --
 
         lua_ls = {
@@ -262,6 +268,7 @@ return {
         'prettier',
         'biome',
         'dprint',
+        'json-lsp',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -270,11 +277,17 @@ return {
         automatic_installation = false,
         handlers = {
           function(server_name)
+            -- Skip disabled servers
+            if disabled_servers[server_name] then
+              return
+            end
+            
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+            print(server_name)
             require('lspconfig')[server_name].setup(server)
           end,
         },
