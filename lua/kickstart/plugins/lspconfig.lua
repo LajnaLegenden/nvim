@@ -205,6 +205,7 @@ return {
       -- List of LSP servers to disable (won't be automatically set up by mason-lspconfig)
       local disabled_servers = {
         ts_ls = true, -- Using amendLsp and vtsls instead
+        vtsls = true,
       }
 
       -- Enable the following language servers
@@ -227,8 +228,8 @@ return {
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
-        vtsls = {},
-        copilot = {},
+        -- vtsls = {},
+        tsgo = {},
         jsonls = {},
         --
 
@@ -281,13 +282,13 @@ return {
             if disabled_servers[server_name] then
               return
             end
-            
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             print(server_name)
+            print(server)
             require('lspconfig')[server_name].setup(server)
           end,
         },

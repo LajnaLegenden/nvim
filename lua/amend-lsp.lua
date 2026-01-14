@@ -13,4 +13,3 @@ require('lspconfig.configs').amendLsp = {
 }
 
 lspconfig.amendLsp.setup {}
-print 'Setting up amend lsp'
