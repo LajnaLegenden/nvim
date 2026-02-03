@@ -231,6 +231,7 @@ return {
         -- vtsls = {},
         tsgo = {},
         jsonls = {},
+        copilot = {},
         --
 
         lua_ls = {
