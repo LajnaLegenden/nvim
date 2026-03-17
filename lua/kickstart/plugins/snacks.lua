@@ -25,6 +25,14 @@ return {
         desc = '[F]ind [H]elp',
       },
       {
+        '\\',
+        function()
+          Snacks.explorer.reveal()
+        end,
+        desc = 'Explorer reveal',
+        silent = true,
+      },
+      {
         '<leader>fk',
         function()
           Snacks.picker.keymaps()
