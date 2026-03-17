@@ -9,7 +9,10 @@ return {
         sources = {
           files = {
             matcher = {
-              frecency = true,
+              fuzzy = true,
+              smartcase = true,
+              ignorecase = true,
+              filename_bonus = true,
             },
           },
         },
