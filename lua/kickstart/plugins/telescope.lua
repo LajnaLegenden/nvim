@@ -1,160 +1,180 @@
--- NOTE: Plugins can specify dependencies.
---
--- The dependencies are proper plugin specifications as well - anything
--- you do for a plugin at the top level, you can do for a dependency.
---
--- Use the `dependencies` key to specify the dependencies of a particular plugin
-
 return {
-  { -- Fuzzy Finder (files, lsp, etc)
-    'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      { -- If encountering errors, see telescope-fzf-native README for installation instructions
-        'nvim-telescope/telescope-fzf-native.nvim',
-
-        -- `build` is used to run some command when the plugin is installed/updated.
-        -- This is only run then, not every time Neovim starts up.
-        build = 'make',
-
-        -- `cond` is a condition used to determine whether this plugin should be
-        -- installed and loaded.
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
+  {
+    'folke/snacks.nvim',
+    priority = 1000,
+    lazy = false,
+    opts = {
+      picker = {
+        enabled = true,
+        ui_select = true,
       },
-      { 'nvim-telescope/telescope-ui-select.nvim' },
-
-      -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
-    config = function()
-      -- Telescope is a fuzzy finder that comes with a lot of different things that
-      -- it can fuzzy find! It's more than just a "file finder", it can search
-      -- many different aspects of Neovim, your workspace, LSP, and more!
-      --
-      -- The easiest way to use Telescope, is to start by doing something like:
-      --  :Telescope help_tags
-      --
-      -- After running this command, a window will open up and you're able to
-      -- type in the prompt window. You'll see a list of `help_tags` options and
-      -- a corresponding preview of the help.
-      --
-      -- Two important keymaps to use while in Telescope are:
-      --  - Insert mode: <c-/>
-      --  - Normal mode: ?
-      --
-      -- This opens a window that shows you all of the keymaps for the current
-      -- Telescope picker. This is really useful to discover what Telescope can
-      -- do as well as how to actually do it!
+    keys = {
+      {
+        '<leader>fh',
+        function()
+          Snacks.picker.help()
+        end,
+        desc = '[F]ind [H]elp',
+      },
+      {
+        '<leader>fk',
+        function()
+          Snacks.picker.keymaps()
+        end,
+        desc = '[F]ind [K]eymaps',
+      },
+      {
+        '<leader>ff',
+        function()
+          Snacks.picker.files()
+        end,
+        desc = '[F]ind [F]iles',
+      },
+      {
+        '<leader>fs',
+        function()
+          Snacks.picker.pickers()
+        end,
+        desc = '[F]ind [S]elect Picker',
+      },
+      {
+        '<leader>fw',
+        function()
+          Snacks.picker.grep_word()
+        end,
+        desc = '[F]ind current [W]ord',
+      },
+      {
+        '<leader>fg',
+        function()
+          Snacks.picker.grep()
+        end,
+        desc = '[F]ind by [G]rep',
+      },
+      {
+        '<leader>fd',
+        function()
+          Snacks.picker.diagnostics()
+        end,
+        desc = '[F]ind [D]iagnostics',
+      },
+      {
+        '<leader>fr',
+        function()
+          Snacks.picker.resume()
+        end,
+        desc = '[F]ind [R]esume',
+      },
+      {
+        '<leader>f.',
+        function()
+          Snacks.picker.recent()
+        end,
+        desc = '[F]ind Recent Files ("." for repeat)',
+      },
+      {
+        '<leader><leader>',
+        function()
+          Snacks.picker.buffers()
+        end,
+        desc = '[F]ind existing buffers',
+      },
 
-      -- [[ Configure Telescope ]]
-      -- See `:help telescope` and `:help telescope.setup()`
-      require('telescope').setup {
-        -- You can put your default mappings / updates / etc. in here
-        --  All the info you're looking for is in `:help telescope.setup()`
-        --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {}
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
-          },
-          fzf = {
-            fuzzy = true,
-            override_generic_sorter = false,
-            override_file_sorter = true,
-            case_mode = 'ignore_case',
-          },
-        },
-      }
-
-      -- Enable Telescope extensions if they are installed
-      pcall(require('telescope').load_extension, 'fzf')
-      pcall(require('telescope').load_extension, 'ui-select')
-
-      -- See `:help telescope.builtin`
-      local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
-      vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
-      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
-      vim.keymap.set('n', '<leader>fs', builtin.builtin, { desc = '[F]ind [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind current [W]ord' })
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind by [G]rep' })
-      vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
-      vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
-      vim.keymap.set('n', '<leader>f.', builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[F]ind existing buffers' })
-
-      -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
-        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily search in current buffer' })
-
-      -- It's also possible to pass additional configuration options.
-      --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set('n', '<leader>f/', function()
-        builtin.live_grep {
-          grep_open_files = true,
-          prompt_title = 'Live Grep in Open Files',
-        }
-      end, { desc = '[F]ind [/] in Open Files' })
-
-      vim.keymap.set('n', '<leader>s', function()
-        local current_word = vim.fn.expand '<cword>'
-        require('telescope.builtin').live_grep {
-          default_text = current_word,
-          prompt_title = 'Live Grep Word Under Cursor',
-        }
-      end, { desc = '[S]earch Word under cursor' })
-
-      vim.keymap.set('n', '<leader>d', function()
-        local current_word = vim.fn.expand '<cword>'
-        require('telescope.builtin').find_files {
-          default_text = current_word,
-          prompt_title = 'Search Files with Word Under Cursor',
-        }
-      end, { desc = 'Search Wor[d] in files' })
-
-      vim.keymap.set('n', '<leader>ft', function()
-        local filename = vim.fn.expand '%:t:r' -- base name without extension
-
-        -- Run ripgrep to find candidate test files
-        local cmd = {
-          'rg',
-          '--files',
-          '--iglob',
-          filename .. '-test.*',
-          '--iglob',
-          filename .. '.test.*',
-        }
-        local results = vim.fn.systemlist(cmd)
-
-        if #results == 0 then
-          vim.notify('No related test files found', vim.log.levels.INFO)
-        elseif #results == 1 then
-          vim.cmd.edit(results[1])
-        else
-          builtin.find_files {
-            prompt_title = 'Find Related Test',
-            find_command = cmd,
+      -- Fuzzy search in current buffer
+      {
+        '<leader>/',
+        function()
+          Snacks.picker.lines {
+            layout = {
+              preset = 'dropdown',
+            },
           }
-        end
-      end, { desc = '[F]find [t]est file' })
-      -- Shortcut for searching your Neovim configuration files
-      vim.keymap.set('n', '<leader>fc', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[F]ind Neovim [c]onfig' })
-    end,
+        end,
+        desc = '[/] Fuzzily search in current buffer',
+      },
+
+      -- Live grep in open buffers
+      {
+        '<leader>f/',
+        function()
+          Snacks.picker.grep_buffers {
+            prompt = 'Live Grep in Open Files',
+          }
+        end,
+        desc = '[F]ind [/] in Open Files',
+      },
+
+      -- Search word under cursor
+      {
+        '<leader>s',
+        function()
+          Snacks.picker.grep_word()
+        end,
+        desc = '[S]earch Word under cursor',
+      },
+
+      -- Search files using word under cursor
+      {
+        '<leader>d',
+        function()
+          Snacks.picker.files {
+            pattern = vim.fn.expand '<cword>',
+            prompt = 'Search Files with Word Under Cursor',
+          }
+        end,
+        desc = 'Search Wor[d] in files',
+      },
+
+      -- Find related test file
+      {
+        '<leader>ft',
+        function()
+          local filename = vim.fn.expand '%:t:r'
+          local results = vim.fn.systemlist {
+            'rg',
+            '--files',
+            '--iglob',
+            filename .. '-test.*',
+            '--iglob',
+            filename .. '.test.*',
+          }
+
+          if #results == 0 then
+            vim.notify('No related test files found', vim.log.levels.INFO)
+          elseif #results == 1 then
+            vim.cmd.edit(results[1])
+          else
+            Snacks.picker.files {
+              title = 'Find Related Test',
+              finder = function()
+                local items = {}
+                for _, file in ipairs(results) do
+                  items[#items + 1] = { text = file, file = file }
+                end
+                return items
+              end,
+              format = 'file',
+              confirm = function(picker, item)
+                picker:close()
+                if item and item.file then
+                  vim.cmd.edit(item.file)
+                end
+              end,
+            }
+          end
+        end,
+        desc = '[F]find [t]est file',
+      },
+
+      -- Search Neovim config
+      {
+        '<leader>fc',
+        function()
+          Snacks.picker.files { cwd = vim.fn.stdpath 'config' }
+        end,
+        desc = '[F]ind Neovim [c]onfig',
+      },
+    },
   },
 }
--- vim: ts=2 sts=2 sw=2 et

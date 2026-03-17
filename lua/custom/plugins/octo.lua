@@ -3,7 +3,6 @@ return {
   cmd = 'Octo',
   dependencies = {
     'nvim-lua/plenary.nvim',
-    'nvim-telescope/telescope.nvim',
     'folke/which-key.nvim',
   },
 
@@ -32,9 +31,10 @@ return {
   },
 
   opts = {
+    picker = 'snacks',
     enable_builtin = true,
     default_remote = { 'upstream', 'origin' },
-    default_merge_method = 'merge',
+    default_merge_method = 'rebase',
 
     reviews = {
       auto_show_threads = true,
@@ -45,7 +45,13 @@ return {
       use_signcolumn = false,
       use_signstatus = true,
     },
-
+    picker_config = {
+      snacks = {
+        layout = {
+          preset = 'sidebar',
+        },
+      },
+    },
     -- 🔒 STRICT MODE
     mappings_disable_default = true,
 
