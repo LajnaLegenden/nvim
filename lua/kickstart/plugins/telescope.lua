@@ -6,6 +6,13 @@ return {
     opts = {
       picker = {
         enabled = true,
+        sources = {
+          files = {
+            matcher = {
+              frecency = true,
+            },
+          },
+        },
         ui_select = true,
       },
     },
@@ -76,7 +83,12 @@ return {
       {
         '<leader><leader>',
         function()
-          Snacks.picker.buffers()
+          Snacks.picker.smart {
+            layout = {
+              preset = 'dropdown',
+              preview = false,
+            },
+          }
         end,
         desc = '[F]ind existing buffers',
       },
