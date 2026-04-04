@@ -1,6 +1,15 @@
 return {
   {
+    'nvim-mini/mini.icons',
+    version = false,
+    opts = {},
+  },
+  {
     'folke/snacks.nvim',
+    dependencies = {
+      { 'nvim-mini/mini.icons', version = false },
+    },
+
     priority = 1000,
     lazy = false,
     opts = {
