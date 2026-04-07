@@ -211,6 +211,7 @@ return {
         jsonls = {},
         cspell_ls = {},
         copilot = {},
+        rnix = {},
         gopls = {},
         --
 
