@@ -210,7 +210,7 @@ return {
         tsgo = {},
         jsonls = {},
         cspell_ls = {},
-        copilot = {},
+        -- copilot = {},
         rnix = {},
         gopls = {},
         --
