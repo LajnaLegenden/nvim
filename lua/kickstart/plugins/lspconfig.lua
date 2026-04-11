@@ -213,6 +213,7 @@ return {
         -- copilot = {},
         rnix = {},
         gopls = {},
+        rust_analyzer = {},
         --
 
         lua_ls = {
