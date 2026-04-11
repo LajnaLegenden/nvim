@@ -238,7 +238,7 @@ return {
               return all
             end,
             format = 'file',
-            confirm = 'file',
+            confirm = 'jump',
             preview = 'file',
           }
         end,
