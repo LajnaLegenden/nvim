@@ -239,7 +239,14 @@ return {
             end,
             format = 'file',
             confirm = 'jump',
-            preview = 'file',
+            preview = function(ctx)
+              local diff = vim.fn.systemlist({ 'git', 'diff', base, '--', ctx.item.file })
+              if #diff == 0 then
+                Snacks.picker.preview.file(ctx)
+              else
+                Snacks.picker.preview.cmd({ 'git', 'diff', base, '--', ctx.item.file }, ctx, { ft = 'diff' })
+              end
+            end,
           }
         end,
         desc = '[F]ind [V]ersion changes',
