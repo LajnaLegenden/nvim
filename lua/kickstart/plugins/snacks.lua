@@ -207,6 +207,43 @@ return {
         end,
         desc = '[F]ind Neovim [c]onfig',
       },
+
+      -- Find all files changed on this branch vs origin
+      {
+        '<leader>fv',
+        function()
+          local base = vim.fn.system('git merge-base origin/master HEAD'):gsub('%s+', '')
+          local diff_files = vim.fn.systemlist('git diff --name-only ' .. base .. '...HEAD')
+          local untracked = vim.fn.systemlist 'git ls-files --others --exclude-standard'
+
+          local seen = {}
+          local all = {}
+          for _, list in ipairs { diff_files, untracked } do
+            for _, file in ipairs(list) do
+              if file ~= '' and not seen[file] then
+                seen[file] = true
+                all[#all + 1] = { text = file, file = file }
+              end
+            end
+          end
+
+          if #all == 0 then
+            vim.notify('No branch changes found', vim.log.levels.INFO)
+            return
+          end
+
+          Snacks.picker {
+            title = 'Branch Changes',
+            finder = function()
+              return all
+            end,
+            format = 'file',
+            confirm = 'file',
+            preview = 'file',
+          }
+        end,
+        desc = '[F]ind [V]ersion changes',
+      },
     },
   },
 }
