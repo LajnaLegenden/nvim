@@ -151,7 +151,7 @@ return {
         '<leader>d',
         function()
           Snacks.picker.files {
-            pattern = vim.fn.expand '<cword>',
+            pattern = vim.fn.expand('<cword>'):gsub('(%l)(%u)', '%1 %2'):gsub('_', ' '):lower(),
             prompt = 'Search Files with Word Under Cursor',
           }
         end,
@@ -240,7 +240,7 @@ return {
             format = 'file',
             confirm = 'jump',
             preview = function(ctx)
-              local diff = vim.fn.systemlist({ 'git', 'diff', base, '--', ctx.item.file })
+              local diff = vim.fn.systemlist { 'git', 'diff', base, '--', ctx.item.file }
               if #diff == 0 then
                 Snacks.picker.preview.file(ctx)
               else
