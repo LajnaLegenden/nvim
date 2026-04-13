@@ -207,7 +207,7 @@ return {
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         -- vtsls = {},
-        tsgo = {},
+        --tsgo = {},
         jsonls = {},
         cspell_ls = {},
         -- copilot = {},
@@ -276,6 +276,13 @@ return {
           end,
         },
       }
+    end,
+  },
+  {
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = function()
+      return { capabilities = require('blink.cmp').get_lsp_capabilities() }
     end,
   },
 }
