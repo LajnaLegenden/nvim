@@ -208,6 +208,7 @@ return {
         -- ts_ls = {},
         -- vtsls = {},
         --tsgo = {},
+        pyright = {},
         jsonls = {},
         cspell_ls = {},
         -- copilot = {},
