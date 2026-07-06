@@ -210,7 +210,7 @@ return {
         --tsgo = {},
         jsonls = {},
         cspell_ls = {},
-        -- copilot = {},
+        -- copilot is enabled separately below (inline completion only) — see `vim.lsp.enable 'copilot'`.
         rnix = {},
         gopls = {},
         rust_analyzer = {},
@@ -253,6 +253,7 @@ return {
         'biome',
         'dprint',
         'json-lsp',
+        'copilot-language-server', -- GitHub Copilot inline completion (enabled below)
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -276,6 +277,38 @@ return {
           end,
         },
       }
+
+      -- GitHub Copilot (inline completion / ghost text).
+      --
+      -- Uses the official `copilot-language-server` via nvim-lspconfig's bundled
+      -- `lsp/copilot.lua` config, which also provides the `:LspCopilotSignIn` /
+      -- `:LspCopilotSignOut` commands. This is intentionally NOT wired through the
+      -- mason-lspconfig handler above: it's inline-completion only, and its Mason
+      -- package name (`copilot-language-server`) differs from the LSP config name.
+      --
+      -- How it fits together:
+      --   * Neovim's native inline completion renders suggestions as ghost text and
+      --     coexists with blink.cmp (blink = popup menu, Copilot = inline overlay).
+      --   * Accept a suggestion with <Tab> — the blink.cmp keymap already falls
+      --     through to `vim.lsp.inline_completion.get()`.
+      --   * The same client also powers sidekick.nvim's Next Edit Suggestions.
+      --
+      -- Fails safe: if the server binary is missing we only warn (nothing breaks).
+      -- If it's installed but you're not signed in, no suggestions appear and
+      -- sidekick prompts you to run `:LspCopilotSignIn`.
+      if vim.fn.executable 'copilot-language-server' == 1 then
+        vim.lsp.enable 'copilot'
+        if vim.lsp.inline_completion then
+          vim.lsp.inline_completion.enable()
+        end
+      else
+        vim.notify(
+          'Copilot: `copilot-language-server` not found. Run `:Mason` to install it, then restart. '
+            .. 'Inline completion is disabled for now.',
+          vim.log.levels.WARN,
+          { title = 'Copilot' }
+        )
+      end
     end,
   },
   {
