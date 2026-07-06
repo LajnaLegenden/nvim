@@ -36,25 +36,11 @@ end
 local function get_js_linters()
   local linters = {}
 
-  -- Check for ESLint config
-  local eslint_found, eslint_files = find_config_upward({
-    '.eslintrc',
-    '.eslintrc.json',
-    '.eslintrc.js',
-    '.eslintrc.cjs',
-    '.eslintrc.yaml',
-    '.eslintrc.yml',
-    'eslint.config.js',
-    'eslint.config.mjs',
-    'eslint.config.cjs',
-  }, 'ESLint')
-
-  if eslint_found then
-    table.insert(linters, 'eslint_d')
-  end
+  -- ESLint is handled by the nvim-eslint LSP (see lua/custom/plugins/nvim-eslint.lua),
+  -- not by nvim-lint anymore.
 
   -- Check for Biome config
-  local biome_found, biome_files = find_config_upward({
+  local biome_found = find_config_upward({
     'biome.json',
     'biome.jsonc',
   }, 'Biome')

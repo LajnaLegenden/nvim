@@ -35,23 +35,6 @@ return {
           shfmt = {
             prepend_args = { '-i', '2' },
           },
-          eslint_d = {
-            require_cwd = true,
-            ignore_stderr = true, -- ✅ only show stdout, suppress eslint warnings
-
-            cwd = require('conform.util').root_file {
-              '.eslintrc',
-              '.eslintrc.json',
-              '.eslintrc.js',
-              '.eslintrc.cjs',
-              '.eslintrc.yaml',
-              '.eslintrc.yml',
-              'eslint.config.js',
-              'eslint.config.mjs',
-              'eslint.config.cjs',
-            },
-          },
-
           prettier = {
             require_cwd = true,
             cwd = require('conform.util').root_file {
@@ -86,10 +69,10 @@ return {
         formatters_by_ft = {
           lua = { 'stylua' },
           python = { 'isort', 'black' },
-          javascript = { 'dprint', 'eslint_d', 'prettier', 'biome' },
-          typescript = { 'dprint', 'eslint_d', 'prettier', 'biome' },
-          javascriptreact = { 'dprint', 'eslint_d', 'prettier', 'biome' },
-          typescriptreact = { 'dprint', 'eslint_d', 'prettier', 'biome' },
+          javascript = { 'dprint', 'prettier', 'biome' },
+          typescript = { 'dprint', 'prettier', 'biome' },
+          javascriptreact = { 'dprint', 'prettier', 'biome' },
+          typescriptreact = { 'dprint', 'prettier', 'biome' },
           json = { 'prettier', 'biome' },
           jsonc = { 'prettier', 'biome' },
           css = { 'prettier', 'biome' },
