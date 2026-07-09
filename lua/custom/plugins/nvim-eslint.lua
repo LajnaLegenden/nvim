@@ -41,7 +41,10 @@ return {
     local function filetype_autocmd_ids()
       local ids = {}
       for _, a in ipairs(vim.api.nvim_get_autocmds { event = 'FileType' }) do
-        ids[a.id] = true
+        -- built-in Vimscript autocmds (filetypeplugin/indent, syntaxset) have no id
+        if a.id then
+          ids[a.id] = true
+        end
       end
       return ids
     end
@@ -59,7 +62,7 @@ return {
     }
 
     for _, a in ipairs(vim.api.nvim_get_autocmds { event = 'FileType' }) do
-      if not before[a.id] then
+      if a.id and not before[a.id] then
         vim.api.nvim_del_autocmd(a.id)
       end
     end
